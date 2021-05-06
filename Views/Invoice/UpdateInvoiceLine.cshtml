@@ -1,0 +1,18 @@
+﻿@model InvoiceLine
+
+<h3 class="p-2 bg-primary text-white text-center">Update Item</h3>
+
+<form asp-action="UpdateInvoiceLine" method="post">
+    <div class="form-group">
+        <label asp-for="Id"></label>
+        <input asp-for="Id" class="form-control" readonly />
+    </div>
+   
+   
+   
+    <div class="text-center">
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a asp-action="UpdateInvoice" class="btn btn-secondary">Cancel</a>
+
+    </div>
+</form>

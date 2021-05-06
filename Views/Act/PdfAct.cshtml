@@ -1,0 +1,144 @@
+﻿@model Act
+@{
+    Layout = null;
+}
+<style>
+    body {
+        margin: 0px;
+        font-family: 'Segoe UI', Arial;
+    }
+
+    .invoice-head {
+        clear: both;
+        display: block;
+        padding: 10px;
+        margin-bottom: 40px;
+    }
+
+    .invoice-title {
+        background-color: dimgrey;
+        color: white;
+        font-size: 20px;
+        padding: 10px;
+        width: 100%;
+    }
+
+    .invoice-to {
+        float: left;
+    }
+
+    .invoice-details {
+        float: right;
+    }
+
+    table {
+        clear: both;
+        border: 1px solid darkgray;
+        border-collapse: collapse;
+        margin: auto;
+    }
+
+    th {
+        background-color: dimgrey;
+        color: white;
+    }
+
+    td, th {
+        border: 1px solid darkgray;
+        padding: 10px 10px 10px 10px;
+    }
+
+    .numeric-cell {
+        text-align: right;
+    }
+
+    .clearfix::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+</style>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Act @Model.Number</title>
+
+</head>
+<body>
+    <div class="invoice-title">
+        <strong>Акт на оказание услуг   №   @Model.Number </strong><br />
+    </div>
+
+    <div class="invoice-head clearfix">
+        <div class="invoice-to">
+            Поставщик и его адрес:<br />
+            <strong>@Model.Owner.FullName</strong><br />
+            Адрес:  @Model.Owner.Adress<br />
+            @Model.Owner.Phone<br />
+            УНП:  @Model.Owner.IdNumber<br />
+            Р/сч. @Model.Owner.Account:<br />
+            <br />
+            Плательщик и его адрес:<br />
+            <strong>@Model.Client.FullName</strong><br />
+            Адрес:  @Model.Client.Adress<br />
+            @Model.Client.Phone<br />
+            УНП:  @Model.Client.IdNumber<br />
+            ОКПО:@Model.Client.OKPO<br />
+            Р/сч. @Model.Client.Account:<br />
+        </div>
+        <div class="invoice-details">
+            АКТ №: @Model.Number<br />
+            от: @Model.Date.ToShortDateString()<br />
+
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>Наименование услуги</th>
+            <th>Количество ч/часов</th>
+            <th>Стоимость 1 ч/часа, бел. руб</th>
+            <th>Сумма без НДС, бел. руб</th>
+            <th>Ставка НДС, %</th>
+            <th>Сумма НДС, бел. руб</th>
+            <th>Сумма с НДС, бел. руб</th>
+        </tr>
+        @{ double counter = 0; }
+        @foreach (var line in Model.Lines)
+        {
+
+            <tr>
+                <td>@line.Service.Text</td>
+                <td class="numeric-cell">@line.Quantity</td>
+                <td class="numeric-cell">@line.Service.Summ.ToString("0.00")</td>
+                <td class="numeric-cell">@(@line.Quantity * @line.Service.Summ)</td>
+                <td class="numeric-cell">@line.Service.Vat%</td>
+                <td class="numeric-cell">@((@line.Quantity * @line.Service.Summ)* @line.Service.Vat/100)</td>
+                <td class="numeric-cell">@(((@line.Quantity * @line.Service.Summ)* @line.Service.Vat/100)+(@line.Quantity * @line.Service.Summ))</td>
+            </tr>
+            counter += (((@line.Quantity * @line.Service.Summ) * @line.Service.Vat / 100) + (@line.Quantity * @line.Service.Summ));
+
+        }
+        <tr>
+            <td colspan="4"></td>
+            <td><strong>Всего:</strong></td>
+            <td><strong>@counter бел. руб</strong></td>
+        </tr>
+    </table>
+    <br /><br /><br /><br /><br />
+    <div class="invoice-head clearfix">
+        <div class="invoice-to">
+            ПОСТАВЩИК:<br />
+            @Model.Owner.Name<br />
+            ____________________@Model.Owner.CEO<br />
+
+        </div>
+        <div class="invoice-details">
+            ЗАКАЗЧИК:<br />
+            @Model.Client.Name<br />
+            ____________________@Model.Client.CEO<br />
+        </div>
+</body>
+</html>

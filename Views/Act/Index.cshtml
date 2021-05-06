@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+@model IEnumerable<Act>
+<html>
+<head>
+    <style>
+        table {
+            font-family: Tahoma, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: .8em
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .n {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        @if (User.Identity.IsAuthenticated)
+        {
+<a style="color: white;">@User.Identity.Name</a>
+                <a asp-controller="Home" asp-action="IndexMain">&#9668</a>
+                                <a asp-controller="Act" asp-action="Index">Акты</a>
+                                                <a asp-controller="Invoice" asp-action="Index">Счета</a>
+                                                                <a asp-controller="Money" asp-action="Index">Банк</a>
+                                                                                <a asp-controller="Account" asp-action="Logoutt">Выход</a>
+                                                                                                <!--<form method="post" asp-controller="Account" asp-action="Logout" class="right">
+                                                                                                <input type="submit" value="Выход" /></form>--> }
+                                                                                                            else
+                                                                                                            {
+                                                                                                <a asp-controller="Account" asp-action="Login" class="right">Вход</a>
+                                                                                                                <a asp-controller="Account" asp-action="Register" class="right">Регистрация</a>}
+
+
+    </div>
+
+    <h3 class="p-2 bg-hsl(0, 0%, 20%) text-dark text-center">Акты оказанных услуг</h3>
+    <div class="text-center">
+        @Html.Partial("Pages", Model)
+        @{ ViewBag.searches = new string[] { "Date", "Number", "Client.Name" };
+            ViewBag.sorts = new string[] { "Date", "Number", "Client.Name" }; }
+        @Html.Partial("PageOptions", Model)
+    </div>
+    <table>
+        <tr class="p-2 bg-secondary text-white text-center">
+
+            <th class="n">Дата</th>
+            <th class="n">Номер</th>
+            <th class="n">Контрагент</th>
+
+            <th class="n">...</th>
+        </tr>
+        <tr>
+            @foreach (Act p in Model)
+            {
+<tr>
+
+
+    <td>@p.Date</td>
+    <td>@p.Number</td>
+    <td>@p.Client.Name</td>
+
+    <td>
+
+        <form asp-action="DeleteAct" method="post">
+            <a asp-action="EditAct" asp-route-key="@p.Id" class="btn btn-outline-secondary">Изменить</a>
+            <a asp-action="CopyAct" asp-route-key="@p.Id" class="btn btn-outline-secondary">Копировать</a>
+            <a asp-action="ViewAsPdf" asp-route-key="@p.Id" class="btn btn-outline-secondary">Печать</a>
+            <input type="hidden" name="Id" value="@p.Id" />
+            <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Вы точно хотите удалить?')">Удалить</button>
+        </form>
+
+    </td>
+
+</tr>
+}
+
+
+
+        </table>
+        <div class="text-center p-2">
+            <a asp-action="EditAct" asp-route-key="0" class="btn btn-secondary">Создать</a>
+        </div>
+
+    </body>
+</html>

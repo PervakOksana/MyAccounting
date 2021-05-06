@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+@model IEnumerable<Service>
+<html>
+<head>
+    <style>
+        table {
+            font-family: Tahoma, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: .8em
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .n {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a style="color: white;">@User.Identity.Name</a>
+            <a asp-controller="Home" asp-action="IndexMain">&#9668</a>
+            <a asp-controller="Owner" asp-action="Index">Мои организации</a>
+            <a asp-controller="Client" asp-action="Index">Контрагенты</a>
+            <a asp-controller="Service" asp-action="Index">Прайс</a>
+
+            <a asp-controller="Account" asp-action="Logoutt">Выход</a>
+            <!--<form method="post" asp-controller="Account" asp-action="Logout" class="right">
+            <input type="submit" value="Выход" /></form>-->
+
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="right">Вход</a>
+            <a asp-controller="Account" asp-action="Register" class="right">Регистрация</a>
+        }
+    </div>
+    <h3 class="p-2 bg-hsl(0, 0%, 20%) text-dark text-center">Прайс</h3>
+    <div class="text-center">
+        @Html.Partial("Pages", Model)
+        @{
+            ViewBag.searches = new string[] { "Name" };
+            ViewBag.sorts = new string[] { "Name" };
+        }
+        @Html.Partial("PageOptions", Model)
+    </div>
+    <table>
+        <tr class="p-2 bg-secondary text-white text-center">
+
+            <th class="n">Содержание операции</th>
+            <th class="n">Сумма без НДС</th>
+            <th class="n">Ставка НДС</th>
+            <th class="n">Сумма НДС</th>
+            <th class="n">Сумма с НДС</th>
+            <th class="n">...</th>
+
+        </tr>
+        <tr>
+            @foreach (Service p in Model)
+            {
+            <tr>
+
+
+                <td>@p.Text</td>
+                <td>@p.Summ</td>
+                <td>@p.Vat</td>
+                <td>@p.VatSum</td>
+                <td>@p.Total</td>
+
+                <td>
+
+                    <form asp-action="DeleteService" method="post">
+                        <a asp-action="UpdateService" asp-route-key="@p.Id" class="btn btn-outline-secondary">Изменить</a>
+                        
+                        <input type="hidden" name="Id" value="@p.Id" />
+                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Вы точно хотите удалить? ')">Удалить</button>
+                    </form>
+
+                </td>
+
+            </tr>
+        }
+
+
+
+        </table>
+        <div class="text-center p-2">
+            <a asp-action="UpdateService" asp-route-key="0" class="btn btn-secondary">Создать</a>
+        </div>
+
+    </body>
+</html>

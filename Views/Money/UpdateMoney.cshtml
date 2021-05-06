@@ -1,0 +1,72 @@
+﻿@model Money
+
+<div class="navbar">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a style="color: white;">@User.Identity.Name</a>
+        <a asp-controller="Home" asp-action="IndexMain">&#9668</a>
+        <a asp-controller="Act" asp-action="Index">Акты</a>
+        <a asp-controller="Invoice" asp-action="Index">Счета</a>
+        <a asp-controller="Money" asp-action="Index">Банк</a>
+        <a asp-controller="Account" asp-action="Logoutt">Выход</a>
+        <!--<form method="post" asp-controller="Account" asp-action="Logout" class="right">
+        <input type="submit" value="Выход" /></form>-->
+
+    }
+    else
+    {
+        <a asp-controller="Account" asp-action="Login" class="right">Вход</a>
+        <a asp-controller="Account" asp-action="Register" class="right">Регистрация</a>
+    }
+
+
+</div>
+<h3 class="p-2 bg-secondary text-white text-center">Добавить выписку</h3>
+
+<form asp-action="UpdateMoney" method="post">
+    <div class="form-group">
+        <label asp-for="Id"></label>
+        <input asp-for="Id" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Date">Дата</label>
+        <input asp-for="Date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Number">Номер</label>
+        <input asp-for="Number" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Client">Контрагент</label>
+        <select class="form-control" asp-for="ClientId">
+            @if (Model.Id == 0)
+            {
+                <option disabled selected>Контрагент</option>
+            }
+            @foreach (Client c in ViewBag.Clients)
+            {
+                <option selected=@(Model.Client?.Id == c.Id)
+                        value="@c.Id">
+                    @c.Name
+                </option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Text">Содержание операции</label>
+        <input asp-for="Text" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="SummePlus">Приход</label>
+        <input asp-for="SummePlus" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="SummeMinus">Расход</label>
+        <input asp-for="SummeMinus" class="form-control" />
+    </div>
+    <div class="text-center">
+        <button class="btn btn-secondary" type="submit">Сохранить</button>
+        <a asp-action="Index" class="btn btn-secondary">Отменить</a>
+    </div>
+</form>

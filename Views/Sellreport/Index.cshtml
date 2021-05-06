@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+@model IEnumerable<Client>
+<html>
+<head>
+    <style>
+        table {
+            font-family: Tahoma, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: .8em
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .n {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <h3 class="p-2 bg-hsl(0, 0%, 20%) text-dark text-center">Отчет об оказанных услугах</h3>
+    <div class="text-center">
+
+    </div>
+    <table>
+
+        <tr class="p-2 bg-primary text-white text-center">
+            <th>Контрагент</th>
+            <th>Номер акта</th>
+            <th>Дата</th>
+            <th>Услуга</th>
+            <th>Количесто ч/часов</th>
+            <th>Стоимость 1 ч/часа, бел.руб.</th>
+            <th>Сумма без НДС, бел.руб.</th>
+            <th>Ставка НДС %</th>
+            <th>Сумма  НДС, бел.руб.</th>
+            <th>Сумма с НДС, бел.руб.</th>
+        </tr>
+        <tr>
+            @{ double counter = 0; }
+            @if (Model != null)
+            {
+                @foreach (var s in Model.OrderBy(s => s.Name))
+                {
+<tr>
+
+                    <th>@s.Name</th>
+
+                </tr>
+                @if (s.Acts != null)
+                {
+                    @foreach (var p in s.Acts)
+                    {
+                        <tr class="table-dark">
+                            <th></th>
+                            <th>@p.Number</th>
+                            <th>@p.Date</th>
+
+                        </tr>
+                        @foreach (var l in p.Lines)
+                        {
+                            <tr class="table-dark">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                
+                                <th>@l.Service.Text</th>
+                                <th>@l.Quantity</th>
+                                <th>@l.Service.Summ</th>
+                                <th>@(@l.Service.Summ*@l.Quantity)</th>
+                                <th>@l.Service.Vat</th>
+                                <th>@(@l.Service.Summ*@l.Quantity*@l.Service.Vat/100)</th>
+                                <th>@(@l.Service.Summ*@l.Quantity*@l.Service.Vat/100+@l.Service.Summ*@l.Quantity)</th>
+                            </tr>
+                            counter += @l.Service.Summ * @l.Quantity * @l.Service.Vat / 100 + @l.Service.Summ * @l.Quantity;
+                        }
+                    }
+
+                }
+            }
+            }
+
+
+           
+            <tr>
+                <td colspan="8"></td>
+                <td><strong>Всего:</strong></td>
+                <td><strong>@counter бел. руб</strong></td>
+            </tr>
+        </table>
+
+    </body>
+</html>

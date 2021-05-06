@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a style="color: white;">@User.Identity.Name</a>
+            <a asp-controller="Home" asp-action="IndexMain">&#9668</a>
+            <a asp-controller="Sellreport" asp-action="Date">Отчет по услугам</a>
+            <a asp-controller="Moneyreport" asp-action="Date">Отчет по поступлениям</a>
+            <a asp-controller="Account" asp-action="Logoutt">Выход</a>
+
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="right">Вход</a>
+            <a asp-controller="Account" asp-action="Register" class="right">Регистрация</a>
+        }
+
+    </div>
+
+    <div class="container">
+        <h2>Отчет о продажах за период</h2>
+        <form method="post" action="~/Sellreport/Tax">
+            <div class="form-group">
+                <label for="email">Начальная дата:</label>
+                <input type="date" class="form-control" name="start">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Конечная дата:</label>
+                <input type="date" class="form-control" name="finish">
+            </div>
+
+            <button type="submit" class="btn btn-secondary">Сформировать</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
